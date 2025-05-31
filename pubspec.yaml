@@ -1,0 +1,40 @@
+name: sabar_
+description: A new Flutter project.
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - images/domba.png
+    - images/user.png
+    - images/home.png
+    - images/data.png
+    - images/tambahdata.png
+    - images/bagihasil.png
+    - images/ccp.JPG
+
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: images/fonts/Poppins-Medium.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
+  #   - family: Trajan Pro
+  #     fonts:
+  #       - asset: fonts/TrajanPro.ttf
+  #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700
