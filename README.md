@@ -1,6 +1,6 @@
-# sabar
+# Sistem Aplikasi Amanah Bantuan Rakyat ( SABAR )
 
-A new Flutter project created with FlutLab - https://flutlab.io
+Aplikasi ini adalah aplikasi pengelolaan peternakan desa yang dikelola langsung olah masyarakat 
 
 ## Getting Started
 
