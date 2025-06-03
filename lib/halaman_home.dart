@@ -140,13 +140,54 @@ class HomePage extends StatelessWidget {
                   Positioned(
                     top: 30,
                     left: 30,
-                    child: Icon(Icons.notifications,
-                        color: Colors.white, size: 32),
+                    child: PopupMenuButton<String>(
+                      icon: Icon(Icons.notifications,
+                          color: Colors.white, size: 32),
+                      onSelected: (value) {
+                        // Aksi ketika item dipilih
+                        print("Kamu memilih: $value");
+                      },
+                      itemBuilder: (BuildContext context) => [
+                        PopupMenuItem(
+                          value: 'Pesan 1',
+                          child: Text('Pesan Notifikasi 1'),
+                        ),
+                        PopupMenuItem(
+                          value: 'Pesan 2',
+                          child: Text('Pesan Notifikasi 2'),
+                        ),
+                        PopupMenuItem(
+                          value: 'Pesan 3',
+                          child: Text('Pesan Notifikasi 3'),
+                        ),
+                      ],
+                    ),
                   ),
+
                   Positioned(
                     top: 30,
                     right: 30,
-                    child: Icon(Icons.settings, color: Colors.white, size: 32),
+                    child: PopupMenuButton<String>(
+                      icon: Icon(Icons.menu, color: Colors.white, size: 32),
+                      onSelected: (value) {
+                        // Aksi ketika item dipilih
+                        print("Kamu memilih: $value");
+                      },
+                      itemBuilder: (BuildContext context) => [
+                        PopupMenuItem(
+                          value: 'Pesan 1',
+                          child: Text('Pesan Notifikasi 1'),
+                        ),
+                        PopupMenuItem(
+                          value: 'Pesan 2',
+                          child: Text('Pesan Notifikasi 2'),
+                        ),
+                        PopupMenuItem(
+                          value: 'Pesan 3',
+                          child: Text('Pesan Notifikasi 3'),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
