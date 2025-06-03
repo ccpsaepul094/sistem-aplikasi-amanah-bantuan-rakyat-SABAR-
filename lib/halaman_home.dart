@@ -175,16 +175,24 @@ class HomePage extends StatelessWidget {
                       },
                       itemBuilder: (BuildContext context) => [
                         PopupMenuItem(
-                          value: 'Pesan 1',
-                          child: Text('Pesan Notifikasi 1'),
+                          value: 'logout',
+                          child: Row(
+                            children: [
+                              Icon(Icons.settings, color: Colors.black),
+                              SizedBox(width: 8), // Jarak antara ikon dan teks
+                              Text('Pengaturan'),
+                            ],
+                          ),
                         ),
                         PopupMenuItem(
-                          value: 'Pesan 2',
-                          child: Text('Pesan Notifikasi 2'),
-                        ),
-                        PopupMenuItem(
-                          value: 'Pesan 3',
-                          child: Text('Pesan Notifikasi 3'),
+                          value: 'logout',
+                          child: Row(
+                            children: [
+                              Icon(Icons.logout, color: Colors.black),
+                              SizedBox(width: 8), // Jarak antara ikon dan teks
+                              Text('Logout'),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -306,6 +314,12 @@ class HomePage extends StatelessWidget {
                           ],
                         ),
                       ),
+                      Text(
+                        "lihat selengkapnya ",
+                        style: TextStyle(
+                            fontFamily: "poppins",
+                            color: const Color.fromARGB(255, 34, 45, 211)),
+                      )
                     ],
                   ),
                 ),
