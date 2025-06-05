@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sabar_/halaman_register.dart';
-import 'package:sabar_/menu.dart';
+import 'package:sabar_/pages/halaman_users/halaman_register.dart';
+import 'package:sabar_/pages/halaman_users/menu.dart';
 
 class LoginScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();

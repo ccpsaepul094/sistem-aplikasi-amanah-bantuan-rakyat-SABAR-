@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sabar_/halaman_profil.dart';
+import 'package:sabar_/pages/halaman_users/halaman_profil.dart';
 
 class RegisterScreen extends StatelessWidget {
   final TextEditingController namaController = TextEditingController();
@@ -33,7 +33,7 @@ class RegisterScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 16),
                 Text(
-                  "Lengkapi data di bawah untuk membuat akun",
+                  "Lengkapi data di bawah untuk mengajukan pengelolaan dan untuk membuat akun",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 15,

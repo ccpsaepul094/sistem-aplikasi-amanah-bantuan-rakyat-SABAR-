@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sabar_/halaman_home.dart';
-import 'package:sabar_/halaman_bagihasil.dart';
-import 'package:sabar_/halaman_data.dart';
-import 'package:sabar_/halaman_profil.dart';
+import 'package:sabar_/pages/halaman_users/halaman_home.dart';
+import 'package:sabar_/pages/halaman_users/halaman_bagihasil.dart';
+import 'package:sabar_/pages/halaman_users/halaman_data.dart';
+import 'package:sabar_/pages/halaman_users/halaman_profil.dart';
 
 class MainScreen extends StatefulWidget {
   @override
