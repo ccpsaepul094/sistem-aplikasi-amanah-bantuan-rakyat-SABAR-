@@ -255,8 +255,7 @@ class HomePage extends StatelessWidget {
                       Text(
                         "lihat selengkapnya ",
                         style: TextStyle(
-                            fontFamily: "poppins",
-                            color: const Color.fromARGB(255, 34, 45, 211)),
+                            fontFamily: "poppins", color: Colors.blue),
                       )
                     ],
                   ),
@@ -314,11 +313,13 @@ class HomePage extends StatelessWidget {
                           ],
                         ),
                       ),
+                      SizedBox(
+                        height: 12,
+                      ),
                       Text(
                         "lihat selengkapnya ",
                         style: TextStyle(
-                            fontFamily: "poppins",
-                            color: const Color.fromARGB(255, 34, 45, 211)),
+                            fontFamily: "poppins", color: Colors.blue),
                       )
                     ],
                   ),
