@@ -44,6 +44,130 @@ class _DataKambingPageState extends State<DataKambingPage> {
 
   int selectedIndex = 0;
 
+  void _showAddKambingDialog() {
+    String nama = '';
+    String umur = '';
+    String berat = '';
+    String status = 'Sehat';
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.blue.shade700,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: Text(
+            "Tambah Data Kambing",
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: "Poppins",
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: Container(
+              width: MediaQuery.of(context).size.width *
+                  0.8, // Lebar 80% dari layar
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildInputField(
+                    label: 'Nama',
+                    onChanged: (val) => nama = val,
+                  ),
+                  SizedBox(height: 10),
+                  _buildInputField(
+                    label: 'Umur',
+                    onChanged: (val) => umur = val,
+                  ),
+                  SizedBox(height: 10),
+                  _buildInputField(
+                    label: 'Berat',
+                    onChanged: (val) => berat = val,
+                  ),
+                  SizedBox(height: 10),
+                  DropdownButtonFormField<String>(
+                    dropdownColor: Colors.blue.shade800,
+                    value: status,
+                    decoration: InputDecoration(
+                      labelText: 'Status',
+                      labelStyle:
+                          TextStyle(color: Colors.white, fontFamily: "Poppins"),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                    style:
+                        TextStyle(color: Colors.white, fontFamily: "Poppins"),
+                    iconEnabledColor: Colors.white,
+                    items: ['Sehat', 'Sakit']
+                        .map((s) => DropdownMenuItem(
+                              value: s,
+                              child: Text(s,
+                                  style: TextStyle(color: Colors.white)),
+                            ))
+                        .toList(),
+                    onChanged: (val) => status = val ?? 'Sehat',
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("Batal", style: TextStyle(color: Colors.white)),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.blue,
+              ),
+              onPressed: () {
+                if (nama.isNotEmpty && umur.isNotEmpty && berat.isNotEmpty) {
+                  setState(() {
+                    dataKambing.add({
+                      'nama': nama,
+                      'umur': umur,
+                      'berat': berat,
+                      'status': status,
+                    });
+                  });
+                  Navigator.pop(context);
+                }
+              },
+              child: Text("Simpan", style: TextStyle(fontFamily: "Poppins")),
+            ),
+          ],
+        ); 
+      },
+    );
+  }
+
+  Widget _buildInputField(
+      {required String label, required Function(String) onChanged}) {
+    return TextField(
+      onChanged: onChanged,
+      style: TextStyle(color: Colors.white, fontFamily: "Poppins"),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: TextStyle(color: Colors.white, fontFamily: "Poppins"),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: Colors.white),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: Colors.white),
+        ),
+      ),
+    );
+  }
+
   void _showAddOptions() {
     showModalBottomSheet(
       context: context,
@@ -58,7 +182,7 @@ class _DataKambingPageState extends State<DataKambingPage> {
             title: Text('Tambah Data Kambing'),
             onTap: () {
               Navigator.pop(context);
-              // Navigasi atau aksi tambah kambing
+              _showAddKambingDialog();
             },
           ),
           ListTile(
@@ -66,7 +190,7 @@ class _DataKambingPageState extends State<DataKambingPage> {
             title: Text('Tambah Data Kelahiran'),
             onTap: () {
               Navigator.pop(context);
-              // Navigasi atau aksi tambah kelahiran
+              // Tambah form kelahiran jika perlu
             },
           ),
           ListTile(
@@ -74,7 +198,7 @@ class _DataKambingPageState extends State<DataKambingPage> {
             title: Text('Tambah Data Kematian'),
             onTap: () {
               Navigator.pop(context);
-              // Navigasi atau aksi tambah kematian
+              // Tambah form kematian jika perlu
             },
           ),
         ],
@@ -88,7 +212,7 @@ class _DataKambingPageState extends State<DataKambingPage> {
       backgroundColor: Colors.grey[100],
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddOptions,
-        child: Icon(Icons.add),
+        child: Icon(Icons.add, color: Colors.white),
         backgroundColor: Colors.blue.shade700,
       ),
       body: SafeArea(
