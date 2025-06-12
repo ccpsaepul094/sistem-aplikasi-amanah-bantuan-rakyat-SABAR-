@@ -11,9 +11,10 @@ class ProfileScreen extends StatelessWidget {
         centerTitle: true,
         title: Text(
           'My Profile',
-          style: TextStyle(color: Colors.black, 
-          fontWeight: FontWeight.w800,
-          fontFamily: "Poppins"),
+          style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w800,
+              fontFamily: "Poppins"),
         ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -35,13 +36,12 @@ class ProfileScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  
                   Center(
                     child: Stack(
                       children: [
                         CircleAvatar(
                           radius: 40,
-                          backgroundImage: AssetImage('images/user.png'),
+                          backgroundImage: AssetImage('images/ccp.JPG'),
                         ),
                         Positioned(
                           bottom: 0,
@@ -60,16 +60,21 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 12),
                   Text(
-                    'Mehedi Hasan',
-                    style: TextStyle(fontWeight: FontWeight.bold,fontFamily: "Poppins", fontSize: 18),
+                    'acep mujahid',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontFamily: "Poppins",
+                        fontSize: 18),
                   ),
                   Text(
-                    'helloyouthmind@gmail.com',
-                    style: TextStyle(color: Colors.grey[600],fontFamily: "Poppins"),
+                    'acepmujahid@gmail.com',
+                    style: TextStyle(
+                        color: Colors.grey[600], fontFamily: "Poppins"),
                   ),
                   Text(
                     '+8801959867406',
-                    style: TextStyle(color: Colors.grey[600],fontFamily: "Poppins"),
+                    style: TextStyle(
+                        color: Colors.grey[600], fontFamily: "Poppins"),
                   ),
                 ],
               ),
