@@ -1,116 +1,176 @@
 import 'package:flutter/material.dart';
 
-class BagihasilPage extends StatelessWidget {
+class BagihasilPage extends StatefulWidget {
+  @override
+  _BagihasilPageState createState() => _BagihasilPageState();
+}
+
+class _BagihasilPageState extends State<BagihasilPage> {
+  List<Map<String, dynamic>> dataKambing = [
+    {
+      "nama": "Kambing Jantan 01",
+      "harga": 2000000,
+      "status": false,
+      "metode_pembayaran": null,
+    },
+    {
+      "nama": "Kambing Betina 02",
+      "harga": 1750000,
+      "status": true,
+      "metode_pembayaran": "Transfer Bank",
+    },
+  ];
+
+  void _showFormPembayaran(BuildContext context, int index) {
+    String metode = 'Transfer Bank';
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Text('Pembayaran', style: TextStyle(fontFamily: 'Poppins')),
+          content: StatefulBuilder(
+            builder: (context, setStateDialog) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  DropdownButtonFormField<String>(
+                    value: metode,
+                    decoration: InputDecoration(
+                      labelText: 'Metode Pembayaran',
+                      border: OutlineInputBorder(),
+                    ),
+                    items: [
+                      DropdownMenuItem(
+                          value: 'Transfer Bank', child: Text('Transfer Bank')),
+                      DropdownMenuItem(value: 'Tunai', child: Text('Tunai')),
+                    ],
+                    onChanged: (value) {
+                      setStateDialog(() {
+                        metode = value!;
+                      });
+                    },
+                  ),
+                ],
+              );
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("Batal", style: TextStyle(fontFamily: 'Poppins')),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  dataKambing[index]['status'] = true;
+                  dataKambing[index]['metode_pembayaran'] = metode;
+                });
+                Navigator.pop(context);
+              },
+              child: Text("Bayar"),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Bagi Hasil",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "Poppins",
-                ),
+      appBar: AppBar(
+        backgroundColor: Colors.blue,
+        title: Text("Data Bagi Hasil", style: TextStyle(fontFamily: "Poppins")),
+        centerTitle: true,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Daftar Anak Kambing",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                fontFamily: "Poppins",
               ),
-              SizedBox(height: 16),
-
-              Container(
-                padding: EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.blue[50],
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Total Keuntungan",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontFamily: "Poppins",
-                        color: Colors.blueGrey,
-                      ),
+            ),
+            SizedBox(height: 16),
+            Expanded(
+              child: ListView.builder(
+                itemCount: dataKambing.length,
+                itemBuilder: (context, index) {
+                  final kambing = dataKambing[index];
+                  return Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    SizedBox(height: 8),
-                    Text(
-                      "Rp 12.500.000",
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: "Poppins",
-                        color: Colors.blue[900],
+                    margin: EdgeInsets.only(bottom: 12),
+                    elevation: 2,
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.green.withOpacity(0.2),
+                        child: Icon(Icons.pets, color: Colors.green),
                       ),
-                    ),
-                    SizedBox(height: 8),
-                    ElevatedButton.icon(
-                      onPressed: () {},
-                      icon: Icon(Icons.add),
-                      label: Text("Tambah Data"),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                      title: Text(
+                        kambing["nama"],
+                        style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                    )
-                  ],
-                ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Harga Tebus: Rp ${kambing["harga"]}",
+                            style: TextStyle(fontFamily: "Poppins"),
+                          ),
+                          if (kambing["metode_pembayaran"] != null)
+                            Text(
+                              "Metode: ${kambing["metode_pembayaran"]}",
+                              style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 12,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                        ],
+                      ),
+                      trailing: kambing["status"]
+                          ? Chip(
+                              label: Text(
+                                "Lunas",
+                                style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  color: Colors.white,
+                                ),
+                              ),
+                              backgroundColor: Colors.green,
+                            )
+                          : ElevatedButton(
+                              onPressed: () =>
+                                  _showFormPembayaran(context, index),
+                              child: Text("Bayar"),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.orange,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
+                    ),
+                  );
+                },
               ),
-
-              SizedBox(height: 24),
-
-              Text(
-                "Rincian Pembagian",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: "Poppins",
-                ),
-              ),
-              SizedBox(height: 12),
-
-              Expanded(
-                child: ListView(
-                  children: [
-                    _buildItem("Desa", "Rp 7.500.000", Colors.green),
-                    _buildItem("Pengelola", "Rp 5.000.000", Colors.orange),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildItem(String title, String amount, Color color) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      elevation: 2,
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: color.withOpacity(0.2),
-          child: Icon(Icons.monetization_on, color: color),
-        ),
-        title: Text(
-          title,
-          style: TextStyle(fontFamily: "Poppins", fontWeight: FontWeight.w600),
-        ),
-        trailing: Text(
-          amount,
-          style: TextStyle(
-            fontFamily: "Poppins",
-            fontWeight: FontWeight.bold,
-            color: color,
-          ),
+            ),
+          ],
         ),
       ),
     );
