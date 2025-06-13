@@ -19,18 +19,6 @@ class _DataKambingPageState extends State<DataKambingPage> {
       'berat': '20 kg',
       'status': 'Sehat'
     },
-    {
-      'nama': 'Kambing C',
-      'umur': '1,5 Tahun',
-      'berat': '30 kg',
-      'status': 'Sakit'
-    },
-    {
-      'nama': 'Kambing D',
-      'umur': '6 Bulan',
-      'berat': '18 kg',
-      'status': 'Sehat'
-    },
   ];
 
   final List<Map<String, dynamic>> dataKelahiran = [
@@ -143,7 +131,7 @@ class _DataKambingPageState extends State<DataKambingPage> {
               child: Text("Simpan", style: TextStyle(fontFamily: "Poppins")),
             ),
           ],
-        ); 
+        );
       },
     );
   }

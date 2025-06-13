@@ -79,6 +79,75 @@ class _BagihasilPageState extends State<BagihasilPage> {
     );
   }
 
+  void _showDetailTransaksi(
+      BuildContext context, Map<String, dynamic> kambing) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Text(
+            "Detail Transaksi",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              fontFamily: "Poppins",
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Divider(),
+              _buildRow("Nama Kambing", kambing['nama']),
+              _buildRow("Harga Tebus", "Rp ${kambing['harga']}"),
+              _buildRow("Status", kambing['status'] ? "Lunas" : "Belum Lunas",
+                  color: kambing['status'] ? Colors.green : Colors.orange),
+              _buildRow(
+                  "Metode Pembayaran", kambing['metode_pembayaran'] ?? "-"),
+              Divider(),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("Tutup", style: TextStyle(fontFamily: "Poppins")),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildRow(String label, String value, {Color? color}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Text(
+              label,
+              style: TextStyle(fontFamily: "Poppins", color: Colors.grey[700]),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(
+                fontFamily: "Poppins",
+                fontWeight: FontWeight.w600,
+                color: color ?? Colors.black,
+              ),
+              textAlign: TextAlign.right,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,65 +177,67 @@ class _BagihasilPageState extends State<BagihasilPage> {
                 itemBuilder: (context, index) {
                   final kambing = dataKambing[index];
                   return Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    margin: EdgeInsets.only(bottom: 12),
-                    elevation: 2,
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: Colors.green.withOpacity(0.2),
-                        child: Icon(Icons.pets, color: Colors.green),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      title: Text(
-                        kambing["nama"],
-                        style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Harga Tebus: Rp ${kambing["harga"]}",
-                            style: TextStyle(fontFamily: "Poppins"),
+                      margin: EdgeInsets.only(bottom: 12),
+                      elevation: 2,
+                      child: InkWell(
+                        onTap: () => _showDetailTransaksi(context, kambing),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: Colors.green.withOpacity(0.2),
+                            child: Icon(Icons.pets, color: Colors.green),
                           ),
-                          if (kambing["metode_pembayaran"] != null)
-                            Text(
-                              "Metode: ${kambing["metode_pembayaran"]}",
-                              style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 12,
-                                color: Colors.grey[600],
-                              ),
+                          title: Text(
+                            kambing["nama"],
+                            style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontWeight: FontWeight.w600,
                             ),
-                        ],
-                      ),
-                      trailing: kambing["status"]
-                          ? Chip(
-                              label: Text(
-                                "Lunas",
-                                style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  color: Colors.white,
-                                ),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Harga Tebus: Rp ${kambing["harga"]}",
+                                style: TextStyle(fontFamily: "Poppins"),
                               ),
-                              backgroundColor: Colors.green,
-                            )
-                          : ElevatedButton(
-                              onPressed: () =>
-                                  _showFormPembayaran(context, index),
-                              child: Text("Bayar"),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.orange,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
+                              if (kambing["metode_pembayaran"] != null)
+                                Text(
+                                  "Metode: ${kambing["metode_pembayaran"]}",
+                                  style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 12,
+                                    color: Colors.grey[600],
+                                  ),
                                 ),
-                              ),
-                            ),
-                    ),
-                  );
+                            ],
+                          ),
+                          trailing: kambing["status"]
+                              ? Chip(
+                                  label: Text(
+                                    "Lunas",
+                                    style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  backgroundColor: Colors.green,
+                                )
+                              : ElevatedButton(
+                                  onPressed: () =>
+                                      _showFormPembayaran(context, index),
+                                  child: Text("Bayar"),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.orange,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                ),
+                        ),
+                      ));
                 },
               ),
             ),
