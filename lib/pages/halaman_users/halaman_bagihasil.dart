@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sabar_/utils/generatePDF.dart';
 
 class BagihasilPage extends StatefulWidget {
   @override
@@ -8,16 +9,13 @@ class BagihasilPage extends StatefulWidget {
 class _BagihasilPageState extends State<BagihasilPage> {
   List<Map<String, dynamic>> dataKambing = [
     {
+      "id_bagihasil": "001345",
       "nama": "Kambing Jantan 01",
+      "nama_peternak": "Acep Mujahid",
+      "tanggal": "7 Mei 2025",
       "harga": 2000000,
       "status": false,
       "metode_pembayaran": null,
-    },
-    {
-      "nama": "Kambing Betina 02",
-      "harga": 1750000,
-      "status": true,
-      "metode_pembayaran": "Transfer Bank",
     },
   ];
 
@@ -85,34 +83,38 @@ class _BagihasilPageState extends State<BagihasilPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          title: Text(
-            "Detail Transaksi",
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              fontFamily: "Poppins",
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Center(
+            child: Text(
+              "Detail Transaksi",
+              style:
+                  TextStyle(fontFamily: "Poppins", fontWeight: FontWeight.bold),
             ),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Divider(),
-              _buildRow("Nama Kambing", kambing['nama']),
-              _buildRow("Harga Tebus", "Rp ${kambing['harga']}"),
+              _buildRow("ID Transaksi", kambing['id_bagihasil'] ?? "-"),
+              _buildRow("Tanggal", kambing['tanggal'] ?? "-"),
+              _buildRow("Nama Kambing", kambing['nama'] ?? "-"),
+              _buildRow("Harga Tebus", "Rp ${kambing['harga'] ?? 0}"),
               _buildRow("Status", kambing['status'] ? "Lunas" : "Belum Lunas",
                   color: kambing['status'] ? Colors.green : Colors.orange),
               _buildRow(
                   "Metode Pembayaran", kambing['metode_pembayaran'] ?? "-"),
-              Divider(),
             ],
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
               child: Text("Tutup", style: TextStyle(fontFamily: "Poppins")),
+            ),
+            ElevatedButton(
+              onPressed: () => generatePDF(kambing),
+              child: Text("Export PDF"),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
             ),
           ],
         );
@@ -127,12 +129,14 @@ class _BagihasilPageState extends State<BagihasilPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
+            flex: 4,
             child: Text(
               label,
               style: TextStyle(fontFamily: "Poppins", color: Colors.grey[700]),
             ),
           ),
           Expanded(
+            flex: 6,
             child: Text(
               value,
               style: TextStyle(
@@ -160,16 +164,7 @@ class _BagihasilPageState extends State<BagihasilPage> {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Daftar Anak Kambing",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                fontFamily: "Poppins",
-              ),
-            ),
             SizedBox(height: 16),
             Expanded(
               child: ListView.builder(
@@ -177,67 +172,71 @@ class _BagihasilPageState extends State<BagihasilPage> {
                 itemBuilder: (context, index) {
                   final kambing = dataKambing[index];
                   return Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      margin: EdgeInsets.only(bottom: 12),
-                      elevation: 2,
-                      child: InkWell(
-                        onTap: () => _showDetailTransaksi(context, kambing),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor: Colors.green.withOpacity(0.2),
-                            child: Icon(Icons.pets, color: Colors.green),
-                          ),
-                          title: Text(
-                            kambing["nama"],
-                            style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontWeight: FontWeight.w600,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    margin: EdgeInsets.only(bottom: 12),
+                    elevation: 2,
+                    child: InkWell(
+                      onTap: () => _showDetailTransaksi(context, kambing),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.green.withOpacity(0.2),
+                          child: Icon(Icons.pets, color: Colors.green),
+                        ),
+                        title: Text(
+                          'ID : ${kambing["id_bagihasil"] ?? "-"}',
+                          style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.w600),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Tanggal: ${kambing["tanggal"] ?? "-"}",
+                              style: TextStyle(fontFamily: "Poppins"),
                             ),
-                          ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
+                            Text(
+                              "Tagihan: Rp ${kambing["harga"] ?? 0}",
+                              style: TextStyle(fontFamily: "Poppins"),
+                            ),
+                            if (kambing["metode_pembayaran"] != null)
                               Text(
-                                "Harga Tebus: Rp ${kambing["harga"]}",
-                                style: TextStyle(fontFamily: "Poppins"),
+                                "Metode: ${kambing["metode_pembayaran"]}",
+                                style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 12,
+                                  color: Colors.grey[600],
+                                ),
                               ),
-                              if (kambing["metode_pembayaran"] != null)
-                                Text(
-                                  "Metode: ${kambing["metode_pembayaran"]}",
+                          ],
+                        ),
+                        trailing: kambing["status"]
+                            ? Chip(
+                                label: Text(
+                                  "Lunas",
                                   style: TextStyle(
                                     fontFamily: "Poppins",
-                                    fontSize: 12,
-                                    color: Colors.grey[600],
+                                    color: Colors.white,
                                   ),
                                 ),
-                            ],
-                          ),
-                          trailing: kambing["status"]
-                              ? Chip(
-                                  label: Text(
-                                    "Lunas",
-                                    style: TextStyle(
-                                      fontFamily: "Poppins",
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  backgroundColor: Colors.green,
-                                )
-                              : ElevatedButton(
-                                  onPressed: () =>
-                                      _showFormPembayaran(context, index),
-                                  child: Text("Bayar"),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.orange,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
+                                backgroundColor: Colors.green,
+                              )
+                            : ElevatedButton(
+                                onPressed: () =>
+                                    _showFormPembayaran(context, index),
+                                child: Text("Bayar"),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.orange,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
                                 ),
-                        ),
-                      ));
+                              ),
+                      ),
+                    ),
+                  );
                 },
               ),
             ),
