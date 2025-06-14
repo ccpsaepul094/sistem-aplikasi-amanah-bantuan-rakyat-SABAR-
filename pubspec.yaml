@@ -30,6 +30,8 @@ flutter:
     - images/tambahdata.png
     - images/bagihasil.png
     - images/ccp.JPG
+    - images/domba.jpeg
+
 
   fonts:
     - family: Poppins
