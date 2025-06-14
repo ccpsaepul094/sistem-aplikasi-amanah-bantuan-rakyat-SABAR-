@@ -25,3 +25,4 @@ com.example.sabar_.app-resValues-23 D:\sabar\build\app\generated\res\resValues\d
 com.example.sabar_.app-packageDebugResources-24 D:\sabar\build\app\intermediates\incremental\debug\packageDebugResources\merged.dir
 com.example.sabar_.app-packageDebugResources-25 D:\sabar\build\app\intermediates\incremental\debug\packageDebugResources\stripped.dir
 com.example.sabar_.app-debug-26 D:\sabar\build\app\intermediates\merged_res\debug\mergeDebugResources
+com.example.sabar_.app-debug-27 D:\sabar\build\printing\intermediates\packaged_res\debug\packageDebugResources
