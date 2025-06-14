@@ -76,6 +76,16 @@
             android:value="2" />
 
         <provider
+            android:name="com.crazecoder.openfile.FileProvider"
+            android:authorities="com.example.sabar_.fileProvider.com.crazecoder.openfile"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            android:requestLegacyExternalStorage="true" >
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
+        <provider
             android:name="net.nfet.flutter.printing.PrintFileProvider"
             android:authorities="com.example.sabar_.flutter.printing"
             android:exported="false"
@@ -96,6 +106,9 @@
             android:name="androidx.startup.InitializationProvider"
             android:authorities="com.example.sabar_.androidx-startup"
             android:exported="false" >
+            <meta-data
+                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+                android:value="androidx.startup" />
             <meta-data
                 android:name="androidx.lifecycle.ProcessLifecycleInitializer"
                 android:value="androidx.startup" />

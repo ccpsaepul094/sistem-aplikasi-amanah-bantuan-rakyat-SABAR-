@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sabar_/utils/eksport_datakambing.dart';
 
 class DataKambingPage extends StatefulWidget {
   @override
@@ -263,10 +264,31 @@ class _DataKambingPageState extends State<DataKambingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showAddOptions,
-        child: Icon(Icons.add, color: Colors.white),
-        backgroundColor: Colors.blue.shade700,
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          // Tombol Ekspor PDF (di atas)
+          FloatingActionButton(
+            heroTag: 'export',
+            onPressed: () {
+              exportAllKambingToPdf(
+                  dataKambing); // Panggil fungsi ekspor PDF kamu
+            },
+            backgroundColor: Colors.redAccent,
+            tooltip: 'Ekspor PDF',
+            child: Icon(Icons.picture_as_pdf),
+          ),
+          SizedBox(height: 12), // Spasi antar tombol
+          // Tombol Tambah Data
+          FloatingActionButton(
+            heroTag: 'add',
+            onPressed: _showAddOptions,
+            backgroundColor: Colors.blue,
+            tooltip: 'Tambah Data',
+            child: Icon(Icons.add),
+          ),
+        ],
       ),
       body: SafeArea(
         child: Padding(
