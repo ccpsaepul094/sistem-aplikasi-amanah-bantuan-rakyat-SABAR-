@@ -158,7 +158,8 @@ class _BagihasilPageState extends State<BagihasilPage> {
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: Text("Data Bagi Hasil", style: TextStyle(fontFamily: "Poppins")),
+        title: Text("Data Bagi Hasil",
+            style: TextStyle(fontFamily: "Poppins", color: Colors.white)),
         centerTitle: true,
       ),
       body: Padding(

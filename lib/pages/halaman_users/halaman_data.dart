@@ -30,6 +30,71 @@ class _DataKambingPageState extends State<DataKambingPage> {
     {'nama': 'Kambing Z', 'tanggal': '05 Mar 2025', 'penyebab': 'Penyakit'},
   ];
 
+  void _showDetailTernak(BuildContext context, Map<String, dynamic> kambing) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Center(
+            child: Text(
+              "Detail Ternak",
+              style:
+                  TextStyle(fontFamily: "Poppins", fontWeight: FontWeight.bold),
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildRow("Nama Kambing", kambing['nama'] ?? "-"),
+              _buildRow("umur ", kambing['umur'] ?? "-"),
+              _buildRow("berat", kambing['berat'] ?? "-"),
+              _buildRow("status", kambing['status'] ?? "-"),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("Tutup", style: TextStyle(fontFamily: "Poppins")),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildRow(String label, String value, {Color? color}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 4,
+            child: Text(
+              label,
+              style: TextStyle(fontFamily: "Poppins", color: Colors.grey[700]),
+            ),
+          ),
+          Expanded(
+            flex: 6,
+            child: Text(
+              value,
+              style: TextStyle(
+                fontFamily: "Poppins",
+                fontWeight: FontWeight.w600,
+                color: color ?? Colors.black,
+              ),
+              textAlign: TextAlign.right,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   int selectedIndex = 0;
 
   void _showAddKambingDialog() {
@@ -337,42 +402,44 @@ class _DataKambingPageState extends State<DataKambingPage> {
                     if (selectedIndex == 0) {
                       final kambing = dataKambing[index];
                       return Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        elevation: 2,
-                        margin: EdgeInsets.only(bottom: 12),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            radius: 24,
-                            backgroundColor: kambing['status'] == 'Sehat'
-                                ? Colors.green[100]
-                                : Colors.red[100],
-                            child: Icon(
-                              Icons.pets,
-                              color: kambing['status'] == 'Sehat'
-                                  ? Colors.green
-                                  : Colors.red,
-                            ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          title: Text(
-                            kambing['nama'],
-                            style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontWeight: FontWeight.w600,
+                          elevation: 2,
+                          margin: EdgeInsets.only(bottom: 12),
+                          child: InkWell(
+                            onTap: () => _showDetailTernak(context, kambing),
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                radius: 24,
+                                backgroundColor: kambing['status'] == 'Sehat'
+                                    ? Colors.green[100]
+                                    : Colors.red[100],
+                                child: Icon(
+                                  Icons.pets,
+                                  color: kambing['status'] == 'Sehat'
+                                      ? Colors.green
+                                      : Colors.red,
+                                ),
+                              ),
+                              title: Text(
+                                kambing['nama'],
+                                style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              subtitle: Text(
+                                "Umur: ${kambing['umur']}\nBerat: ${kambing['berat']}\nStatus: ${kambing['status']}",
+                                style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 13,
+                                  height: 1.4,
+                                ),
+                              ),
+                              isThreeLine: true,
                             ),
-                          ),
-                          subtitle: Text(
-                            "Umur: ${kambing['umur']}\nBerat: ${kambing['berat']}\nStatus: ${kambing['status']}",
-                            style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 13,
-                              height: 1.4,
-                            ),
-                          ),
-                          isThreeLine: true,
-                        ),
-                      );
+                          ));
                     } else if (selectedIndex == 1) {
                       final anak = dataKelahiran[index];
                       return Card(
