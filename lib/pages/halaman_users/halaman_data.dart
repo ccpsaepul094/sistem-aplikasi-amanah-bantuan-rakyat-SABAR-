@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sabar_/utils/eksport_datakambing.dart';
+import 'package:sabar_/pages/halaman_users/halaman_edit.dart';
 
 class DataKambingPage extends StatefulWidget {
   @override
@@ -11,6 +12,12 @@ class _DataKambingPageState extends State<DataKambingPage> {
     {'nama': '001', 'umur': '1 Tahun', 'berat': '25 kg', 'status': 'Sehat'},
     {'nama': '002', 'umur': '8 Bulan', 'berat': '20 kg', 'status': 'Sehat'},
   ];
+
+  void hapusTernak(String id) {
+    setState(() {
+      dataKambing.removeWhere((ternak) => ternak['nama'] == id);
+    });
+  }
 
   final List<Map<String, dynamic>> dataKelahiran = [
     {'nama': '003', 'tanggal': '01 Jan 2025', 'induk': 'Kambing A'},
@@ -62,6 +69,34 @@ class _DataKambingPageState extends State<DataKambingPage> {
             TextButton(
               onPressed: () => Navigator.pop(context),
               child: Text("Tutup", style: TextStyle(fontFamily: "Poppins")),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context); // tutup dialog dulu
+                final updatedKambing = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditTernakPage(
+                      kambing: kambing,
+                    ),
+                  ),
+                );
+
+                if (updatedKambing != null) {
+                  setState(() {
+                    final index = dataKambing.indexOf(kambing);
+                    dataKambing[index] = updatedKambing;
+                  });
+                }
+              },
+              child: Text("edit", style: TextStyle(fontFamily: "Poppins")),
+            ),
+            TextButton(
+              onPressed: () {
+                hapusTernak(kambing['nama']); // panggil fungsi hapus
+                Navigator.pop(context); // tutup dialog
+              },
+              child: Text("hapus", style: TextStyle(fontFamily: "Poppins")),
             ),
           ],
         );
