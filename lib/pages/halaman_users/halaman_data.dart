@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sabar_/utils/eksport_datakambing.dart';
 import 'package:sabar_/pages/halaman_users/halaman_edit.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 class DataKambingPage extends StatefulWidget {
   @override
@@ -9,9 +11,44 @@ class DataKambingPage extends StatefulWidget {
 
 class _DataKambingPageState extends State<DataKambingPage> {
   final List<Map<String, dynamic>> dataKambing = [
-    {'nama': '001', 'umur': '1 Tahun', 'berat': '25 kg', 'status': 'hidup'},
-    {'nama': '002', 'umur': '8 Bulan', 'berat': '20 kg', 'status': 'hidup'},
+    {
+      'nama': '001',
+      'umur': '01 Jan 2024',
+      'berat': '25 kg',
+      'status': 'hidup',
+      'foto': '', // bisa diganti path lokal jika tersedia
+      'keterangan': 'Induk A'
+    },
+    {
+      'nama': '002',
+      'umur': '10 Feb 2024',
+      'berat': '20 kg',
+      'status': 'hidup',
+      'foto': '',
+      'keterangan': 'Anak dari Induk B'
+    },
   ];
+
+  File? selectedImage;
+  final ImagePicker picker = ImagePicker();
+
+  String _namaBulan(int bulan) {
+    const bulanList = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "Mei",
+      "Juni",
+      "Juli",
+      "Agus",
+      "Sep",
+      "Okt",
+      "Nov",
+      "Des"
+    ];
+    return bulanList[bulan - 1];
+  }
 
   void hapusTernak(String id) {
     setState(() {
@@ -135,17 +172,17 @@ class _DataKambingPageState extends State<DataKambingPage> {
   }
 
   int selectedIndex = 0;
-
-  //tambah data kambing
   void _showAddKambingDialog() {
-    String nama = '';
-    String umur = '';
+    String tanggalLahir = '';
     String berat = '';
     String status = 'hidup';
+    String keterangan = '';
+    TextEditingController tanggalLahirController = TextEditingController();
 
     showDialog(
       context: context,
       builder: (context) {
+        final newId = (dataKambing.length + 1).toString().padLeft(3, '0');
         return AlertDialog(
           backgroundColor: Colors.blue.shade700,
           shape:
@@ -160,51 +197,164 @@ class _DataKambingPageState extends State<DataKambingPage> {
           ),
           content: SingleChildScrollView(
             child: Container(
-              width: MediaQuery.of(context).size.width *
-                  0.8, // Lebar 80% dari layar
+              width: MediaQuery.of(context).size.width * 0.95,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  _buildInputField(
-                    label: 'id',
-                    onChanged: (val) => nama = val,
+                  // 🔹 ID & Tanggal Lahir
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          initialValue: newId,
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            labelText: 'ID',
+                            labelStyle: TextStyle(color: Colors.white),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
+                          ),
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: TextFormField(
+                          controller: tanggalLahirController,
+                          readOnly: true,
+                          onTap: () async {
+                            DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime(2100),
+                            );
+                            if (pickedDate != null) {
+                              String formattedDate =
+                                  "${pickedDate.day.toString().padLeft(2, '0')} ${_namaBulan(pickedDate.month)} ${pickedDate.year}";
+                              setState(() {
+                                tanggalLahir = formattedDate;
+                                tanggalLahirController.text = formattedDate;
+                              });
+                            }
+                          },
+                          decoration: InputDecoration(
+                            labelText: 'Tanggal Lahir',
+                            labelStyle: TextStyle(color: Colors.white),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
+                          ),
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 10),
-                  _buildInputField(
-                    label: 'tanggal lahir',
-                    onChanged: (val) => umur = val,
+
+                  // 🔹 Berat & Status
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildInputField(
+                          label: 'Berat',
+                          onChanged: (val) => berat = val,
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: DropdownButtonFormField<String>(
+                          dropdownColor: Colors.blue.shade800,
+                          value: status,
+                          decoration: InputDecoration(
+                            labelText: 'Status',
+                            labelStyle: TextStyle(color: Colors.white),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
+                          ),
+                          style: TextStyle(color: Colors.white),
+                          iconEnabledColor: Colors.white,
+                          items: ['hidup', 'mati']
+                              .map((s) => DropdownMenuItem(
+                                    value: s,
+                                    child: Text(s,
+                                        style: TextStyle(color: Colors.white)),
+                                  ))
+                              .toList(),
+                          onChanged: (val) => status = val ?? 'hidup',
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 10),
-                  _buildInputField(
-                    label: 'Berat',
-                    onChanged: (val) => berat = val,
+
+                  // 🔹 Foto Kambing
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Foto Kambing",
+                          style: TextStyle(
+                              fontFamily: "Poppins",
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600)),
+                      SizedBox(height: 8),
+                      GestureDetector(
+                        onTap: () async {
+                          final pickedFile = await picker.pickImage(
+                              source: ImageSource.gallery);
+
+                          if (pickedFile != null) {
+                            setState(() {
+                              selectedImage = File(pickedFile.path);
+                            });
+                          }
+                        },
+                        child: Container(
+                          height: 150,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white),
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white10,
+                          ),
+                          child: selectedImage == null
+                              ? Center(
+                                  child: Text(
+                                    "Pilih Foto",
+                                    style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        color: Colors.white),
+                                  ),
+                                )
+                              : ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.file(selectedImage!,
+                                      fit: BoxFit.cover),
+                                ),
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 10),
-                  DropdownButtonFormField<String>(
-                    dropdownColor: Colors.blue.shade800,
-                    value: status,
+
+                  // 🔹 Keterangan diperbesar
+                  TextField(
+                    onChanged: (val) => keterangan = val,
+                    maxLines: 3,
+                    style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
-                      labelText: 'Status',
-                      labelStyle:
-                          TextStyle(color: Colors.white, fontFamily: "Poppins"),
+                      labelText: 'Keterangan',
+                      labelStyle: TextStyle(color: Colors.white),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide(color: Colors.white),
                       ),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10)),
                     ),
-                    style:
-                        TextStyle(color: Colors.white, fontFamily: "Poppins"),
-                    iconEnabledColor: Colors.white,
-                    items: ['hidup', 'mati']
-                        .map((s) => DropdownMenuItem(
-                              value: s,
-                              child: Text(s,
-                                  style: TextStyle(color: Colors.white)),
-                            ))
-                        .toList(),
-                    onChanged: (val) => status = val ?? 'hidup',
                   ),
                 ],
               ),
@@ -221,13 +371,15 @@ class _DataKambingPageState extends State<DataKambingPage> {
                 foregroundColor: Colors.blue,
               ),
               onPressed: () {
-                if (nama.isNotEmpty && umur.isNotEmpty && berat.isNotEmpty) {
+                if (tanggalLahir.isNotEmpty && berat.isNotEmpty) {
                   setState(() {
                     dataKambing.add({
-                      'nama': nama,
-                      'umur': umur,
+                      'nama': newId,
+                      'umur': tanggalLahir,
                       'berat': berat,
                       'status': status,
+                      'foto': selectedImage?.path ?? '',
+                      'keterangan': keterangan,
                     });
                   });
                   Navigator.pop(context);
@@ -244,109 +396,6 @@ class _DataKambingPageState extends State<DataKambingPage> {
   //tambah kelahiran
 
   //tambah kemtian
-  void _showAddKematian() {
-    String nama = '';
-    String umur = '';
-    String berat = '';
-    String status = 'hidup';
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: Colors.blue.shade700,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          title: Text(
-            "Tambah Data Kambing",
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: "Poppins",
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          content: SingleChildScrollView(
-            child: Container(
-              width: MediaQuery.of(context).size.width *
-                  0.8, // Lebar 80% dari layar
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _buildInputField(
-                    label: 'Nama',
-                    onChanged: (val) => nama = val,
-                  ),
-                  SizedBox(height: 10),
-                  _buildInputField(
-                    label: 'Umur',
-                    onChanged: (val) => umur = val,
-                  ),
-                  SizedBox(height: 10),
-                  _buildInputField(
-                    label: 'Berat',
-                    onChanged: (val) => berat = val,
-                  ),
-                  SizedBox(height: 10),
-                  DropdownButtonFormField<String>(
-                    dropdownColor: Colors.blue.shade800,
-                    value: status,
-                    decoration: InputDecoration(
-                      labelText: 'Status',
-                      labelStyle:
-                          TextStyle(color: Colors.white, fontFamily: "Poppins"),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                    ),
-                    style:
-                        TextStyle(color: Colors.white, fontFamily: "Poppins"),
-                    iconEnabledColor: Colors.white,
-                    items: ['hidup', 'mati']
-                        .map((s) => DropdownMenuItem(
-                              value: s,
-                              child: Text(s,
-                                  style: TextStyle(color: Colors.white)),
-                            ))
-                        .toList(),
-                    onChanged: (val) => status = val ?? 'hidup',
-                  ),
-                ],
-              ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text("Batal", style: TextStyle(color: Colors.white)),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.blue,
-              ),
-              onPressed: () {
-                if (nama.isNotEmpty && umur.isNotEmpty && berat.isNotEmpty) {
-                  setState(() {
-                    dataKambing.add({
-                      'nama': nama,
-                      'umur': umur,
-                      'berat': berat,
-                      'status': status,
-                    });
-                  });
-                  Navigator.pop(context);
-                }
-              },
-              child: Text("Simpan", style: TextStyle(fontFamily: "Poppins")),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   Widget _buildInputField(
       {required String label, required Function(String) onChanged}) {
@@ -564,8 +613,11 @@ class _DataKambingPageState extends State<DataKambingPage> {
                             child: ListTile(
                               leading: CircleAvatar(
                                 radius: 40,
-                                backgroundImage:
-                                    AssetImage('images/domba.jpeg'),
+                                backgroundImage: kambing['foto'] != null &&
+                                        kambing['foto'] != ''
+                                    ? FileImage(File(kambing['foto']))
+                                    : AssetImage('images/domba.jpeg')
+                                        as ImageProvider,
                               ),
                               title: Text(
                                 kambing['nama'],
