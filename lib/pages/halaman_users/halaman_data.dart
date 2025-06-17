@@ -9,8 +9,8 @@ class DataKambingPage extends StatefulWidget {
 
 class _DataKambingPageState extends State<DataKambingPage> {
   final List<Map<String, dynamic>> dataKambing = [
-    {'nama': '001', 'umur': '1 Tahun', 'berat': '25 kg', 'status': 'Sehat'},
-    {'nama': '002', 'umur': '8 Bulan', 'berat': '20 kg', 'status': 'Sehat'},
+    {'nama': '001', 'umur': '1 Tahun', 'berat': '25 kg', 'status': 'hidup'},
+    {'nama': '002', 'umur': '8 Bulan', 'berat': '20 kg', 'status': 'hidup'},
   ];
 
   void hapusTernak(String id) {
@@ -141,7 +141,7 @@ class _DataKambingPageState extends State<DataKambingPage> {
     String nama = '';
     String umur = '';
     String berat = '';
-    String status = 'Sehat';
+    String status = 'hidup';
 
     showDialog(
       context: context,
@@ -166,12 +166,12 @@ class _DataKambingPageState extends State<DataKambingPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   _buildInputField(
-                    label: 'Nama',
+                    label: 'id',
                     onChanged: (val) => nama = val,
                   ),
                   SizedBox(height: 10),
                   _buildInputField(
-                    label: 'Umur',
+                    label: 'tanggal lahir',
                     onChanged: (val) => umur = val,
                   ),
                   SizedBox(height: 10),
@@ -197,14 +197,14 @@ class _DataKambingPageState extends State<DataKambingPage> {
                     style:
                         TextStyle(color: Colors.white, fontFamily: "Poppins"),
                     iconEnabledColor: Colors.white,
-                    items: ['Sehat', 'Sakit']
+                    items: ['hidup', 'mati']
                         .map((s) => DropdownMenuItem(
                               value: s,
                               child: Text(s,
                                   style: TextStyle(color: Colors.white)),
                             ))
                         .toList(),
-                    onChanged: (val) => status = val ?? 'Sehat',
+                    onChanged: (val) => status = val ?? 'hidup',
                   ),
                 ],
               ),
@@ -242,116 +242,13 @@ class _DataKambingPageState extends State<DataKambingPage> {
   }
 
   //tambah kelahiran
-  void _showAddkelahiran() {
-    String nama = '';
-    String umur = '';
-    String berat = '';
-    String status = 'Sehat';
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: Colors.blue.shade700,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          title: Text(
-            "Tambah kelahiran",
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: "Poppins",
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          content: SingleChildScrollView(
-            child: Container(
-              width: MediaQuery.of(context).size.width *
-                  0.8, // Lebar 80% dari layar
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _buildInputField(
-                    label: 'id',
-                    onChanged: (val) => nama = val,
-                  ),
-                  SizedBox(height: 10),
-                  _buildInputField(
-                    label: 'tanggal lahir',
-                    onChanged: (val) => umur = val,
-                  ),
-                  SizedBox(height: 10),
-                  _buildInputField(
-                    label: 'induk',
-                    onChanged: (val) => berat = val,
-                  ),
-                  SizedBox(height: 10),
-                  DropdownButtonFormField<String>(
-                    dropdownColor: Colors.blue.shade800,
-                    value: status,
-                    decoration: InputDecoration(
-                      labelText: 'Status',
-                      labelStyle:
-                          TextStyle(color: Colors.white, fontFamily: "Poppins"),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                    ),
-                    style:
-                        TextStyle(color: Colors.white, fontFamily: "Poppins"),
-                    iconEnabledColor: Colors.white,
-                    items: ['Sehat', 'Sakit']
-                        .map((s) => DropdownMenuItem(
-                              value: s,
-                              child: Text(s,
-                                  style: TextStyle(color: Colors.white)),
-                            ))
-                        .toList(),
-                    onChanged: (val) => status = val ?? 'Sehat',
-                  ),
-                ],
-              ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text("Batal", style: TextStyle(color: Colors.white)),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.blue,
-              ),
-              onPressed: () {
-                if (nama.isNotEmpty && umur.isNotEmpty && berat.isNotEmpty) {
-                  setState(() {
-                    dataKambing.add({
-                      'nama': nama,
-                      'umur': umur,
-                      'berat': berat,
-                      'status': status,
-                    });
-                  });
-                  Navigator.pop(context);
-                }
-              },
-              child: Text("Simpan", style: TextStyle(fontFamily: "Poppins")),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   //tambah kemtian
   void _showAddKematian() {
     String nama = '';
     String umur = '';
     String berat = '';
-    String status = 'Sehat';
+    String status = 'hidup';
 
     showDialog(
       context: context,
@@ -407,14 +304,14 @@ class _DataKambingPageState extends State<DataKambingPage> {
                     style:
                         TextStyle(color: Colors.white, fontFamily: "Poppins"),
                     iconEnabledColor: Colors.white,
-                    items: ['Sehat', 'Sakit']
+                    items: ['hidup', 'mati']
                         .map((s) => DropdownMenuItem(
                               value: s,
                               child: Text(s,
                                   style: TextStyle(color: Colors.white)),
                             ))
                         .toList(),
-                    onChanged: (val) => status = val ?? 'Sehat',
+                    onChanged: (val) => status = val ?? 'hidup',
                   ),
                 ],
               ),
@@ -486,23 +383,6 @@ class _DataKambingPageState extends State<DataKambingPage> {
             onTap: () {
               Navigator.pop(context);
               _showAddKambingDialog();
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.cake),
-            title: Text('Tambah Data Kelahiran'),
-            onTap: () {
-              Navigator.pop(context);
-              _showAddkelahiran();
-              // Tambah form kelahiran jika perlu
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.sentiment_dissatisfied),
-            title: Text('Tambah Data Kematian'),
-            onTap: () {
-              Navigator.pop(context);
-              _showAddKematian();
             },
           ),
         ],
