@@ -57,8 +57,14 @@ class _DataKambingPageState extends State<DataKambingPage> {
   }
 
   final List<Map<String, dynamic>> dataKelahiran = [
-    {'nama': '003', 'tanggal': '01 Jan 2025', 'induk': 'Kambing A'},
-    {'nama': '004', 'tanggal': '10 Feb 2025', 'induk': 'Kambing B'},
+    {
+      'nama': '002',
+      'umur': '10 Feb 2024',
+      'berat': '20 kg',
+      'status': 'hidup',
+      'foto': '',
+      'keterangan': 'Anak dari Induk B'
+    },
   ];
 
   final List<Map<String, dynamic>> dataKematian = [
@@ -382,6 +388,15 @@ class _DataKambingPageState extends State<DataKambingPage> {
                       'keterangan': keterangan,
                     });
                   });
+
+                  dataKelahiran.add({
+                    'nama': newId,
+                    'umur': tanggalLahirController.text, // <== ini penting!
+                    'berat': berat,
+                    'status': status,
+                    'foto': selectedImage?.path ?? '',
+                    'induk': keterangan, // anggap ini berisi nama induk
+                  });
                   Navigator.pop(context);
                 }
               },
@@ -627,7 +642,7 @@ class _DataKambingPageState extends State<DataKambingPage> {
                                 ),
                               ),
                               subtitle: Text(
-                                "Umur: ${kambing['umur']}\nBerat: ${kambing['berat']}\nStatus: ${kambing['status']}",
+                                "Berat: ${kambing['berat']}\nStatus: ${kambing['status']}",
                                 style: TextStyle(
                                   fontFamily: "Poppins",
                                   fontSize: 13,
@@ -640,34 +655,40 @@ class _DataKambingPageState extends State<DataKambingPage> {
                     } else if (selectedIndex == 1) {
                       final anak = dataKelahiran[index];
                       return Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        elevation: 2,
-                        margin: EdgeInsets.only(bottom: 12),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            radius: 40,
-                            backgroundImage: AssetImage('images/domba.jpeg'),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          title: Text(
-                            anak['nama'],
-                            style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontWeight: FontWeight.w600,
+                          elevation: 2,
+                          margin: EdgeInsets.only(bottom: 12),
+                          child: InkWell(
+                            onTap: () => _showDetailTernak(context, anak),
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                radius: 40,
+                                backgroundImage:
+                                    anak['foto'] != null && anak['foto'] != ''
+                                        ? FileImage(File(anak['foto']))
+                                        : AssetImage('images/domba.jpeg')
+                                            as ImageProvider,
+                              ),
+                              title: Text(
+                                anak['nama'],
+                                style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              subtitle: Text(
+                                "Umur: ${anak['umur']}\nBerat: ${anak['berat']}\nStatus: ${anak['status']}",
+                                style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 13,
+                                  height: 1.4,
+                                ),
+                              ),
+                              isThreeLine: true,
                             ),
-                          ),
-                          subtitle: Text(
-                            "Tanggal Lahir: ${anak['tanggal']}\nInduk: ${anak['induk']}",
-                            style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 13,
-                              height: 1.4,
-                            ),
-                          ),
-                          isThreeLine: true,
-                        ),
-                      );
+                          ));
                     } else {
                       final kematian = dataKematian[index];
                       return Card(
