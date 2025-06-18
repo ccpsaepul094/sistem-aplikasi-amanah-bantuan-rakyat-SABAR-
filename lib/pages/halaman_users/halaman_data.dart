@@ -10,13 +10,14 @@ class DataKambingPage extends StatefulWidget {
 }
 
 class _DataKambingPageState extends State<DataKambingPage> {
+  //data kambing
   final List<Map<String, dynamic>> dataKambing = [
     {
       'nama': '001',
       'umur': '01 Jan 2024',
       'berat': '25 kg',
       'status': 'hidup',
-      'foto': '', // bisa diganti path lokal jika tersedia
+      'foto': '',
       'keterangan': 'Induk A'
     },
     {
@@ -29,9 +30,15 @@ class _DataKambingPageState extends State<DataKambingPage> {
     },
   ];
 
+  int selectedIndex = 0;
+  String _searchQuery = '';
+  TextEditingController _searchController = TextEditingController();
+
+  // fungsi tambahkan foto
   File? selectedImage;
   final ImagePicker picker = ImagePicker();
 
+  // fungsi menambahkan tanggal
   String _namaBulan(int bulan) {
     const bulanList = [
       "Jan",
@@ -50,12 +57,14 @@ class _DataKambingPageState extends State<DataKambingPage> {
     return bulanList[bulan - 1];
   }
 
+  //fungsi hapus
   void hapusTernak(String id) {
     setState(() {
       dataKambing.removeWhere((ternak) => ternak['nama'] == id);
     });
   }
 
+  // data kelahiran
   final List<Map<String, dynamic>> dataKelahiran = [
     {
       'nama': '002',
@@ -71,6 +80,7 @@ class _DataKambingPageState extends State<DataKambingPage> {
     {'nama': 'Kambing Z', 'tanggal': '05 Mar 2025', 'penyebab': 'Penyakit'},
   ];
 
+  // memunculkan detail ternak
   void _showDetailTernak(BuildContext context, Map<String, dynamic> kambing) {
     showDialog(
       context: context,
@@ -147,6 +157,7 @@ class _DataKambingPageState extends State<DataKambingPage> {
     );
   }
 
+  //helper detail ternak
   Widget _buildRow(String label, String value, {Color? color}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
@@ -177,7 +188,63 @@ class _DataKambingPageState extends State<DataKambingPage> {
     );
   }
 
-  int selectedIndex = 0;
+  //memunculkan detail kelahiran
+  void _showDetailKelahiran(BuildContext context, Map<String, dynamic> anak) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Center(
+            child: Text(
+              "Detail Kelahiran",
+              style:
+                  TextStyle(fontFamily: "Poppins", fontWeight: FontWeight.bold),
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: ClipOval(
+                  child: anak['foto'] != null && anak['foto'] != ''
+                      ? Image.file(
+                          File(anak['foto']),
+                          width: 120,
+                          height: 120,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.asset(
+                          'images/domba.jpeg',
+                          width: 120,
+                          height: 120,
+                          fit: BoxFit.cover,
+                        ),
+                ),
+              ),
+              SizedBox(height: 20),
+              _buildRow("ID Anak", anak['nama'] ?? "-"),
+              _buildRow("Tanggal Lahir", anak['umur'] ?? "-"),
+              _buildRow("Berat", anak['berat'] ?? "-"),
+              _buildRow("Induk", anak['induk'] ?? "-"),
+              _buildRow("keterangan", anak['keterangan'] ?? "-"),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("Tutup", style: TextStyle(fontFamily: "Poppins")),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // fungsi tambah data kambing
+
   void _showAddKambingDialog() {
     String tanggalLahir = '';
     String berat = '';
@@ -207,7 +274,6 @@ class _DataKambingPageState extends State<DataKambingPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // 🔹 ID & Tanggal Lahir
                   Row(
                     children: [
                       Expanded(
@@ -260,8 +326,6 @@ class _DataKambingPageState extends State<DataKambingPage> {
                     ],
                   ),
                   SizedBox(height: 10),
-
-                  // 🔹 Berat & Status
                   Row(
                     children: [
                       Expanded(
@@ -298,8 +362,6 @@ class _DataKambingPageState extends State<DataKambingPage> {
                     ],
                   ),
                   SizedBox(height: 10),
-
-                  // 🔹 Foto Kambing
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -347,8 +409,6 @@ class _DataKambingPageState extends State<DataKambingPage> {
                     ],
                   ),
                   SizedBox(height: 10),
-
-                  // 🔹 Keterangan diperbesar
                   TextField(
                     onChanged: (val) => keterangan = val,
                     maxLines: 3,
@@ -391,11 +451,11 @@ class _DataKambingPageState extends State<DataKambingPage> {
 
                   dataKelahiran.add({
                     'nama': newId,
-                    'umur': tanggalLahirController.text, // <== ini penting!
+                    'umur': tanggalLahirController.text,
                     'berat': berat,
                     'status': status,
                     'foto': selectedImage?.path ?? '',
-                    'induk': keterangan, // anggap ini berisi nama induk
+                    'keterangan': keterangan,
                   });
                   Navigator.pop(context);
                 }
@@ -432,6 +492,7 @@ class _DataKambingPageState extends State<DataKambingPage> {
     );
   }
 
+  // tombil tambah data kambing
   void _showAddOptions() {
     showModalBottomSheet(
       context: context,
@@ -456,6 +517,43 @@ class _DataKambingPageState extends State<DataKambingPage> {
 
   @override
   Widget build(BuildContext context) {
+    List<Map<String, dynamic>> displayedData = [];
+
+    if (_searchQuery.isEmpty) {
+      if (selectedIndex == 0) {
+        displayedData = dataKambing;
+      } else if (selectedIndex == 1) {
+        displayedData = dataKelahiran;
+      } else {
+        displayedData =
+            dataKambing.where((k) => k['status'] == 'mati').toList();
+      }
+    } else {
+      if (selectedIndex == 0) {
+        displayedData = dataKambing
+            .where((k) =>
+                k['nama'].toLowerCase().contains(_searchQuery.toLowerCase()) ||
+                k['umur'].toLowerCase().contains(_searchQuery.toLowerCase()) ||
+                k['berat'].toLowerCase().contains(_searchQuery.toLowerCase()))
+            .toList();
+      } else if (selectedIndex == 1) {
+        displayedData = dataKelahiran
+            .where((k) =>
+                k['nama'].toLowerCase().contains(_searchQuery.toLowerCase()) ||
+                k['umur'].toLowerCase().contains(_searchQuery.toLowerCase()))
+            .toList();
+      } else {
+        displayedData = dataKambing
+            .where((k) =>
+                k['status'] == 'mati' &&
+                (k['nama'].toLowerCase().contains(_searchQuery.toLowerCase()) ||
+                    k['umur']
+                        .toLowerCase()
+                        .contains(_searchQuery.toLowerCase())))
+            .toList();
+      }
+    }
+
     return Scaffold(
       backgroundColor: Colors.grey[100],
       floatingActionButton: Column(
@@ -504,15 +602,18 @@ class _DataKambingPageState extends State<DataKambingPage> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 2, top: 12, right: 2),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Cari Data Ternak',
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+              TextField(
+                controller: _searchController,
+                onChanged: (value) {
+                  setState(() {
+                    _searchQuery = value.toLowerCase();
+                  });
+                },
+                decoration: InputDecoration(
+                  hintText: 'Cari Data Ternak',
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
@@ -609,106 +710,49 @@ class _DataKambingPageState extends State<DataKambingPage> {
               SizedBox(height: 20),
               Expanded(
                 child: ListView.builder(
-                  itemCount: selectedIndex == 0
-                      ? dataKambing.length
-                      : selectedIndex == 1
-                          ? dataKelahiran.length
-                          : dataKematian.length,
+                  itemCount: displayedData.length,
                   itemBuilder: (context, index) {
-                    if (selectedIndex == 0) {
-                      final kambing = dataKambing[index];
-                      return Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          elevation: 2,
-                          margin: EdgeInsets.only(bottom: 12),
-                          child: InkWell(
-                            onTap: () => _showDetailTernak(context, kambing),
-                            child: ListTile(
-                              leading: CircleAvatar(
-                                radius: 40,
-                                backgroundImage: kambing['foto'] != null &&
-                                        kambing['foto'] != ''
-                                    ? FileImage(File(kambing['foto']))
-                                    : AssetImage('images/domba.jpeg')
-                                        as ImageProvider,
-                              ),
-                              title: Text(
-                                kambing['nama'],
-                                style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              subtitle: Text(
-                                "Berat: ${kambing['berat']}\nStatus: ${kambing['status']}",
-                                style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 13,
-                                  height: 1.4,
-                                ),
-                              ),
-                              isThreeLine: true,
-                            ),
-                          ));
-                    } else if (selectedIndex == 1) {
-                      final anak = dataKelahiran[index];
-                      return Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          elevation: 2,
-                          margin: EdgeInsets.only(bottom: 12),
-                          child: InkWell(
-                            onTap: () => _showDetailTernak(context, anak),
-                            child: ListTile(
-                              leading: CircleAvatar(
-                                radius: 40,
-                                backgroundImage:
-                                    anak['foto'] != null && anak['foto'] != ''
-                                        ? FileImage(File(anak['foto']))
-                                        : AssetImage('images/domba.jpeg')
-                                            as ImageProvider,
-                              ),
-                              title: Text(
-                                anak['nama'],
-                                style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              subtitle: Text(
-                                "Umur: ${anak['umur']}\nBerat: ${anak['berat']}\nStatus: ${anak['status']}",
-                                style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 13,
-                                  height: 1.4,
-                                ),
-                              ),
-                              isThreeLine: true,
-                            ),
-                          ));
-                    } else {
-                      final kematian = dataKematian[index];
-                      return Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        elevation: 2,
-                        margin: EdgeInsets.only(bottom: 12),
+                    final data = displayedData[index];
+
+                    return Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 2,
+                      margin: EdgeInsets.only(bottom: 12),
+                      child: InkWell(
+                        onTap: () {
+                          if (selectedIndex == 0) {
+                            _showDetailTernak(context, data);
+                          } else if (selectedIndex == 1) {
+                            _showDetailKelahiran(context, data);
+                          }
+                        },
                         child: ListTile(
-                          leading: Icon(Icons.sentiment_dissatisfied,
-                              color: Colors.red),
+                          leading: selectedIndex == 2
+                              ? Icon(Icons.sentiment_dissatisfied,
+                                  color: Colors.red)
+                              : CircleAvatar(
+                                  radius: 40,
+                                  backgroundImage:
+                                      data['foto'] != null && data['foto'] != ''
+                                          ? FileImage(File(data['foto']))
+                                          : AssetImage('images/domba.jpeg')
+                                              as ImageProvider,
+                                ),
                           title: Text(
-                            kematian['nama'],
+                            data['nama'],
                             style: TextStyle(
                               fontFamily: "Poppins",
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                           subtitle: Text(
-                            "Tanggal: ${kematian['tanggal']}\nPenyebab: ${kematian['penyebab']}",
+                            selectedIndex == 0
+                                ? "Berat: ${data['berat']}\nStatus: ${data['status']}"
+                                : selectedIndex == 1
+                                    ? "Umur: ${data['umur']}\nBerat: ${data['berat']}\nStatus: ${data['status']}"
+                                    : "Tanggal: ${data['umur']}\nStatus: ${data['status']}",
                             style: TextStyle(
                               fontFamily: "Poppins",
                               fontSize: 13,
@@ -717,8 +761,8 @@ class _DataKambingPageState extends State<DataKambingPage> {
                           ),
                           isThreeLine: true,
                         ),
-                      );
-                    }
+                      ),
+                    );
                   },
                 ),
               ),
