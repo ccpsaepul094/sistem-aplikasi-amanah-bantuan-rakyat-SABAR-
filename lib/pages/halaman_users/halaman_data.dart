@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sabar_/utils/eksport_datakambing.dart';
 import 'package:sabar_/pages/halaman_users/halaman_edit.dart';
+import 'package:sabar_/utils/data_globals.dart';
+
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
@@ -458,6 +460,24 @@ class _DataKambingPageState extends State<DataKambingPage> {
                     'keterangan': keterangan,
                   });
                   Navigator.pop(context);
+
+                  String _formatTanggal(DateTime date) {
+                    return "${date.day.toString().padLeft(2, '0')} ${_namaBulan(date.month)} ${date.year}";
+                  }
+
+                  dataBagihasil.value.add({
+                    'id_bagihasil':
+                        DateTime.now().millisecondsSinceEpoch.toString(),
+                    'nama': newId,
+                    'nama_peternak': 'Acep Mujahid',
+                    'tanggal': _formatTanggal(DateTime.now()),
+                    'harga': 200000,
+                    'status': false,
+                    'metode_pembayaran': null,
+                  });
+
+                  dataBagihasil
+                      .notifyListeners(); // harus dipanggil dari variabel aslinya, bukan dari .value
                 }
               },
               child: Text("Simpan", style: TextStyle(fontFamily: "Poppins")),

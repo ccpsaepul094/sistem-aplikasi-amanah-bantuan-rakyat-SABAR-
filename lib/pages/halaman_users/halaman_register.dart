@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sabar_/pages/halaman_users/halaman_profil.dart';
+import 'package:sabar_/pages/halaman_users/halaman_login.dart';
 
 class RegisterScreen extends StatelessWidget {
   final TextEditingController namaController = TextEditingController();
@@ -48,22 +48,27 @@ class RegisterScreen extends StatelessWidget {
                 _buildInputField('Nama Lengkap', Icons.person, namaController),
 
                 // NIK
-                _buildInputField('NIK', Icons.badge, nikController, keyboardType: TextInputType.number),
+                _buildInputField('NIK', Icons.badge, nikController,
+                    keyboardType: TextInputType.number),
 
                 // Username
-                _buildInputField('Username', Icons.account_circle, usernameController),
+                _buildInputField(
+                    'Username', Icons.account_circle, usernameController),
 
                 // Alamat
                 _buildInputField('Alamat', Icons.home, alamatController),
 
                 // No HP
-                _buildInputField('No HP', Icons.phone, nohpController, keyboardType: TextInputType.phone),
+                _buildInputField('No HP', Icons.phone, nohpController,
+                    keyboardType: TextInputType.phone),
 
                 // Email
-                _buildInputField('Email', Icons.email, emailController, keyboardType: TextInputType.emailAddress),
+                _buildInputField('Email', Icons.email, emailController,
+                    keyboardType: TextInputType.emailAddress),
 
                 // Password
-                _buildInputField('Password', Icons.lock, passwordController, isPassword: true),
+                _buildInputField('Password', Icons.lock, passwordController,
+                    isPassword: true),
 
                 SizedBox(height: 24),
                 SizedBox(
@@ -80,7 +85,7 @@ class RegisterScreen extends StatelessWidget {
                       // TODO: validasi & kirim data
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ProfileScreen()),
+                        MaterialPageRoute(builder: (context) => LoginScreen()),
                       );
                     },
                     child: Text(
@@ -115,8 +120,10 @@ class RegisterScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInputField(String label, IconData icon, TextEditingController controller,
-      {bool isPassword = false, TextInputType keyboardType = TextInputType.text}) {
+  Widget _buildInputField(
+      String label, IconData icon, TextEditingController controller,
+      {bool isPassword = false,
+      TextInputType keyboardType = TextInputType.text}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: TextField(
